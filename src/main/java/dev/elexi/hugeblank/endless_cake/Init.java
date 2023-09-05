@@ -1,11 +1,14 @@
 package dev.elexi.hugeblank.endless_cake;
 
+import dev.elexi.hugeblank.endless_cake.block.EndlessCakeBlockEntity;
 import dev.elexi.hugeblank.endless_cake.block.EndlessCandleCakeBlock;
 import dev.elexi.hugeblank.endless_cake.block.EndlessCakeBlock;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -18,6 +21,8 @@ import net.minecraft.util.Rarity;
 public class Init implements ModInitializer {
     public static final String ID = "endless_cake";
     public static final EndlessCakeBlock ENDLESS_CAKE = new EndlessCakeBlock(AbstractBlock.Settings.copy(Blocks.CAKE).luminance((state) -> (Boolean)state.get(Properties.LIT) ? 3 : 0));
+    public static BlockEntityType<EndlessCakeBlockEntity> ENDLESS_CAKE_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(ID,"endless_cake_block_entity"),
+            FabricBlockEntityTypeBuilder.create(EndlessCakeBlockEntity::new, ENDLESS_CAKE).build());
 
     private static void registerBlock(String name, Block block, ItemGroup group) {
         Identifier id = new Identifier(ID, name);

@@ -1,6 +1,7 @@
 package dev.elexi.hugeblank.endless_cake.block;
 
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -16,10 +17,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.block.FallingBlock.canFallThrough;
 
-public class EndlessCakeBlock extends CakeBlock implements LandingBlock {
+public class EndlessCakeBlock extends CakeBlock implements LandingBlock, BlockEntityProvider {
 
     public EndlessCakeBlock(AbstractBlock.Settings settings) {
         super(Settings.copy(Blocks.CAKE).strength(0.5F).sounds(BlockSoundGroup.WOOL));
@@ -96,6 +98,14 @@ public class EndlessCakeBlock extends CakeBlock implements LandingBlock {
             }
             return ActionResult.SUCCESS;
         }
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        if (state.get(BITES) != 0) {
+            return new EndlessCakeBlockEntity(pos, state);
+        } else return null;
     }
 }
 

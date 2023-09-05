@@ -21,6 +21,9 @@
   "entrypoints": {
     "main": [
       "dev.elexi.hugeblank.endless_cake.Init"
+    ],
+    "client": [
+      "dev.elexi.hugeblank.endless_cake.InitClient"
     ]
   },
   "mixins": [
