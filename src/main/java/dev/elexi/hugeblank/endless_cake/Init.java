@@ -17,7 +17,7 @@ import net.minecraft.util.Rarity;
 
 public class Init implements ModInitializer {
     public static final String ID = "endless_cake";
-    public static final EndlessCakeBlock ENDLESS_CAKE = new EndlessCakeBlock();
+    public static final EndlessCakeBlock ENDLESS_CAKE = new EndlessCakeBlock(AbstractBlock.Settings.copy(Blocks.CAKE).luminance((state) -> (Boolean)state.get(Properties.LIT) ? 3 : 0));
 
     private static void registerBlock(String name, Block block, ItemGroup group) {
         Identifier id = new Identifier(ID, name);

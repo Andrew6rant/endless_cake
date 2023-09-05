@@ -46,7 +46,7 @@ public class EndlessCandleCakeBlock extends CandleCakeBlock {
                 extinguish(player, state, world, pos);
                 return ActionResult.success(world.isClient);
             } else {
-                return EndlessCakeBlock.tryEat(world, pos, player);
+                return EndlessCakeBlock.tryEat(world, pos, state, player);
             }
         } else {
             return ActionResult.PASS;
