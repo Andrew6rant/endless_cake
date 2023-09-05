@@ -9,10 +9,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
 
 public class Init implements ModInitializer {
     public static final String ID = "endless_cake";
@@ -20,15 +21,15 @@ public class Init implements ModInitializer {
 
     private static void registerBlock(String name, Block block, ItemGroup group) {
         Identifier id = new Identifier(ID, name);
-        Registry.register(Registry.BLOCK, id, block);
+        Registry.register(Registries.BLOCK, id, block);
         if (group != null) {
-            Item item = new BlockItem(block, new Item.Settings().group(group).rarity(Rarity.EPIC));
-            Registry.register(Registry.ITEM, id, item);
+            Item item = new BlockItem(block, new Item.Settings().rarity(Rarity.EPIC));
+            Registry.register(Registries.ITEM, id, item);
         }
     }
 
     private static void registerCakeType(String name, EndlessCakeBlock cake) {
-        registerBlock(name, cake, ItemGroup.FOOD);
+        registerBlock(name, cake, null);
         registerBlock("candle_" + name, new EndlessCandleCakeBlock(Blocks.CANDLE, cake, AbstractBlock.Settings.copy(Blocks.CAKE).luminance((state) -> (Boolean)state.get(Properties.LIT) ? 3 : 0)), null);
         registerBlock("white_candle_" + name, new EndlessCandleCakeBlock(Blocks.WHITE_CANDLE, cake, AbstractBlock.Settings.copy(Blocks.CANDLE_CAKE)), null);
         registerBlock("orange_candle_" + name, new EndlessCandleCakeBlock(Blocks.ORANGE_CANDLE, cake, AbstractBlock.Settings.copy(Blocks.CANDLE_CAKE)), null);
