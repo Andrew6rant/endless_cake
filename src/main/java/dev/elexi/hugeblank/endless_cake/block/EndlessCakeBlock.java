@@ -1,15 +1,15 @@
 package dev.elexi.hugeblank.endless_cake.block;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CakeBlock;
+import net.minecraft.block.*;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
@@ -17,7 +17,9 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.event.GameEvent;
 
-public class EndlessCakeBlock extends CakeBlock {
+import static net.minecraft.block.FallingBlock.canFallThrough;
+
+public class EndlessCakeBlock extends CakeBlock implements LandingBlock {
 
     public EndlessCakeBlock(AbstractBlock.Settings settings) {
         super(Settings.copy(Blocks.CAKE).strength(0.5F).sounds(BlockSoundGroup.WOOL));
@@ -27,6 +29,28 @@ public class EndlessCakeBlock extends CakeBlock {
     @Override
     public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
         teleport(state, world, pos);
+    }
+
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        world.scheduleBlockTick(pos, this, this.getFallDelay());
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        world.scheduleBlockTick(pos, this, this.getFallDelay());
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        if (canFallThrough(world.getBlockState(pos.down())) && pos.getY() >= world.getBottomY()) {
+            FallingBlockEntity.spawnFromBlock(world, pos, state);
+        }
+    }
+
+    protected int getFallDelay() {
+        return 5;
     }
 
     // Modified from net.minecraft.block.DragonEggBlock
